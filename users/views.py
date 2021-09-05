@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 
 # Create your views here.
 
@@ -18,16 +19,25 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("users:index"))
+            return HttpResponseRedirect(request.GET["next"])
         else:
+            messages.warning(request, "Invalid credential.")
             return render(request, "users/login.html", {
-                "message": "Invalid credential."
+                "messages": messages.get_messages(request)
             })
 
-    return render(request, "users/login.html")
+    if "next" in request.GET:
+        next = request.GET["next"]
+    else:
+        next = reverse("users:index")
+
+    return render(request, "users/login.html", {
+        "next": next
+    })
 
 def logout_view(request):
     logout(request)
+    messages.success(request, "Logged out.")
     return render(request, "users/login.html", {
-        "message": "Logged out."
+        "messages": messages.get_messages(request)
     })

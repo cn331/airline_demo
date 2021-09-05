@@ -2,11 +2,13 @@
 
 {% block body %}
 
-    {% if message %}
-        <div>{{ message }}</div>
+    {% if messages %}
+        {% for message in messages %}
+        <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
     {% endif %}
-    
-    <form action="{% url 'users:login' %}" method="post">
+
+    <form action="{% url 'users:login' %}?next={{ next }}" method="post">
         {% csrf_token %}
         <input type="text" name="username" placeholder="Username">
         <input type="password" name="password" placeholder="Password">
