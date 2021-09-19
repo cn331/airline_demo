@@ -7,7 +7,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run Django unit tests
-      run: |
+    - run: |
         pip3 install --user -r requirements.txt
         python3 manage.py makemigrations
         python3 manage.py migrate

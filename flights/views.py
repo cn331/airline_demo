@@ -28,6 +28,7 @@ def book(request, flight_id):
         return HttpResponseRedirect(reverse("users:login")+f"?next={request.path}")
 
     flight = get_object_or_404(Flight, pk=flight_id)
+    #if request.user not in flight.passengers.all() and flight.is_seat_available():
     if request.user not in flight.passengers.all():
         flight.passengers.add(request.user)
     return HttpResponseRedirect(reverse("flights:flight", args=(flight_id,)))
