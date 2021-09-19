@@ -61,21 +61,23 @@ class FlightViewTestCase(TestCase):
         """ authenticated user can book a flight """
         user = User.objects.create(username="user2", password="1234", email="user2@example.com")
         f = Flight.objects.first()
+        f.capacity = 2
+        f.save()
 
         c = Client()
         c.force_login(user)
         response = c.get(reverse('flights:book', args=(f.id,)))
         self.assertEqual(f.passengers.count(), 2)
-
 
     def test_cannot_book_nonavailable_seat_flight(self):
         """ cannot book full capacity flight"""
-        self.test_authenticated_user_can_book_flight()
 
         user = User.objects.create(username="user3", password="1234", email="user3@example.com")
         f = Flight.objects.first()
+        f.capacity = 1
+        f.save()
 
         c = Client()
         c.force_login(user)
         response = c.get(reverse('flights:book', args=(f.id,)))
-        self.assertEqual(f.passengers.count(), 2)
+        self.assertEqual(f.passengers.count(), 1)
