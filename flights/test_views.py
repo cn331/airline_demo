@@ -72,7 +72,7 @@ class FlightViewTestCase(TestCase):
         """ cannot book full capacity flight"""
         user = User.objects.create(username="user3", password="1234", email="user3@example.com")
         f = Flight.objects.first()
-
+        
         c = Client()
         c.force_login(user)
         response = c.get(reverse('flights:book', args=(f.id,)))
