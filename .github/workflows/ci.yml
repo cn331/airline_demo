@@ -11,4 +11,5 @@ jobs:
         pip3 install --user -r requirements.txt
         python3 manage.py makemigrations
         python3 manage.py migrate
-        python3 manage.py test
+        coverage run --source='.' manage.py test
+        coverage report
